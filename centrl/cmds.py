@@ -1,11 +1,12 @@
 from tools.error import ShellInstanceError, FATAL_ERR, SHELL, \
-IS_NOT, OF_TYPE, ERROR, QUOTE, INVALID_ENV_VAR
+IS_NOT, OF_TYPE, ERROR, QUOTE, INVALID_ENV_VAR, MISSING_ARG
 from hashlib import sha256
 from .version import *
+from subprocess import Popen, PIPE
 
 cmds = [
     'cd', 'rsetu', 'quit', 'udateu', 'github', 'ver', 'setenv', 'mkenv',
-    'dlenv', 'help'
+    'dlenv', 'help', 'wincmd', 'arth'
 ]
 
 def cd(cmd_set_seq, instance):
@@ -108,10 +109,33 @@ def dlenv(cmd_set_seq, instance):
     else:
         raise ShellInstanceError(FATAL_ERR, instance, IS_NOT, OF_TYPE, SHELL)
 
+def wincmd(cmd_set_seq, instance):
+    try:
+        if cmd_set_seq[1]:
+            pp = Popen(cmd_set_seq[1], stderr=PIPE, stdout=PIPE)
+            pp.wait()
+            out, err = pp.communicate()
+            if not out and err:
+                print(err)
+            elif out and not err:
+                print(out)
+            else:
+                print('cmd ended with outcode 0')
+    except IndexError:
+        print(ERROR, MISSING_ARG, '1.', 'Cannot run wincmd')
+
+            
 
 def help(cmd_set_seq, instance):
     if cmd_set_seq[1] in cmds:
         print('Find help here:', github_link+'/wiki/'+'Commands/')
+
+def arth(cmd_set_seq, instance):
+    try:
+        if cmd_set_seq[2] == '+':
+            print(int(cmd_set_seq[1])+int(cmd_set_seq[3]))
+    except Exception as e:
+        print(e)
 
 
 

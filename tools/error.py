@@ -6,6 +6,7 @@ ERROR = 'Error:'
 INVALID_CMD = 'Invalid command'
 QUOTE = '\''
 INVALID_ENV_VAR = 'Invalid environment variable'
+MISSING_ARG = 'Missing argument'
 
 
 class ShellInstanceError(Exception):
