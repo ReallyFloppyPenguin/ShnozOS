@@ -5,6 +5,7 @@ SHELL = 'Shell'
 ERROR = 'Error:'
 INVALID_CMD = 'Invalid command'
 QUOTE = '\''
+INVALID_ENV_VAR = 'Invalid environment variable'
 
 
 class ShellInstanceError(Exception):

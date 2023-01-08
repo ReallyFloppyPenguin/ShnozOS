@@ -8,10 +8,13 @@ class Shell:
     def __init__(self, fsf: str, data_j: str) -> None:
         self.cd = 'root'
         self.json = self.load('centrl/data.json')
-        if not self.json.get('username'):
-            self.create_user()        
-        self.username = self.json['username']
-        self.passw = self.json['password']
+        try:
+            if not self.json['user']['username']:
+                self.create_user()
+        except AttributeError:
+            self.create_user()
+        self.username = self.json['user']['username']
+        self.passw = self.json['user']['password']
         self.inp_start = f'{self.username}@{self.cd}$ '
         self.jp = data_j.encode('utf-8')
         self.fsf = fsf
@@ -24,8 +27,10 @@ class Shell:
         username = input('Username: ')
         passw = input('Password (it will be hashed): ')
         data_to_dump = {
-            "username": username,
-            "password": sha256(passw.encode('utf-8')).hexdigest()
+            'user': {
+                'username': username,
+                'password': sha256(passw.encode('utf-8')).hexdigest()
+            }
         }
         self.dump(data_to_dump, 'centrl/data.json')
         self.json = self.load('centrl/data.json')
@@ -53,6 +58,15 @@ class Shell:
         if cmd_set_seq[0] == 'quit':
             quit()
 
+        if cmd_set_seq[0] == 'ver':
+            ver(cmd_set_seq, self)
+
+        if cmd_set_seq[0] == 'github':
+            github(cmd_set_seq, self)
+
+        if cmd_set_seq[0] == 'setenv':
+            setenv(cmd_set_seq, self)
+
         if not cmd_set_seq[0] in cmds:
             # Cmd not listed so create error
             print(ERROR, INVALID_CMD, QUOTE+cmd_set_seq[0]+QUOTE, 3)
@@ -77,8 +91,11 @@ class Shell:
     def reload(self, cd):
         self.cd = cd
         self.json = self.load('centrl/data.json')
-        if not self.json.get('username'):
-            self.create_user()    
-        self.username = self.json['username']
-        self.passw = self.json['password']
+        try:
+            if not self.json['user']['username']:
+                self.create_user()
+        except KeyError:
+            self.create_user()
+        self.username = self.json['user']['username']
+        self.passw = self.json['user']['password']
         self.inp_start = f'{self.username}@{self.cd}$ '
