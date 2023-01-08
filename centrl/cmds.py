@@ -5,7 +5,7 @@ from .version import *
 
 cmds = [
     'cd', 'rsetu', 'quit', 'udateu', 'github', 'ver', 'setenv', 'mkenv',
-    'dlenv'
+    'dlenv', 'help'
 ]
 
 def cd(cmd_set_seq, instance):
@@ -93,7 +93,6 @@ def mkenv(cmd_set_seq, instance):
 def dlenv(cmd_set_seq, instance):
     if instance.json:
         d = instance.json
-        getting_password = True
         ensure_password_is_right(instance)
         try:
             try:
@@ -110,12 +109,18 @@ def dlenv(cmd_set_seq, instance):
         raise ShellInstanceError(FATAL_ERR, instance, IS_NOT, OF_TYPE, SHELL)
 
 
+def help(cmd_set_seq, instance):
+    if cmd_set_seq[1] in cmds:
+        print('Find help here:', github_link+'/wiki/'+'Commands/')
+
+
+
 def ensure_password_is_right(instance):
-    d = instance.json
+    json = instance.json
     getting_password = True
     while getting_password:
         pss = input('Password: ')
-        if not sha256(pss.encode()).hexdigest() == d['user']['password']:
+        if not sha256(pss.encode()).hexdigest() == json['user']['password']:
             print('Wrong password')
             continue
         else:

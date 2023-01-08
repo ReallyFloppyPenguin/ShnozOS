@@ -64,6 +64,9 @@ class Shell:
         if cmd_set_seq[0] == 'github':
             github(cmd_set_seq, self)
 
+        if cmd_set_seq[0] == 'help':
+            help(cmd_set_seq, self)
+
         if cmd_set_seq[0] == 'setenv':
             setenv(cmd_set_seq, self)
 
