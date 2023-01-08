@@ -94,12 +94,7 @@ def dlenv(cmd_set_seq, instance):
     if instance.json:
         d = instance.json
         getting_password = True
-        while getting_password:
-            pss = input('Password: ')
-            if not sha256(pss.encode()).hexdigest() == d['user']['password']:
-                print('Wrong password')
-            else:
-                getting_password = False
+        ensure_password_is_right(instance)
         try:
             try:
                 env_var_name = cmd_set_seq[1]
@@ -113,3 +108,15 @@ def dlenv(cmd_set_seq, instance):
             print(ERROR, 'No environment variable name and value not defined')
     else:
         raise ShellInstanceError(FATAL_ERR, instance, IS_NOT, OF_TYPE, SHELL)
+
+
+def ensure_password_is_right(instance):
+    d = instance.json
+    getting_password = True
+    while getting_password:
+        pss = input('Password: ')
+        if not sha256(pss.encode()).hexdigest() == d['user']['password']:
+            print('Wrong password')
+            continue
+        else:
+            getting_password = False
