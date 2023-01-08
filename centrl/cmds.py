@@ -58,10 +58,5 @@ def setenv(cmd_set_seq, instance):
                 d['env'][env_var_name] = val
         except KeyError:
             print(ERROR, INVALID_ENV_VAR, QUOTE+env_var_name+QUOTE)
-        if d.get(env_var_name):
-            d['env'][env_var_name] = val
-            instance.dump(d, 'centrl/data.json')
-        else:
-            print(ERROR, INVALID_ENV_VAR, QUOTE+env_var_name+QUOTE)
     except IndexError:
         print(ERROR, 'No environment variable name and value not defined')
