@@ -9,7 +9,7 @@ also if you wan't to make your own changes don't forget to create a pull request
 
 Need help?
   what you can do is:
-  * Check the wiki
+  * Check the [wiki](https://github.com/gv-coder/ShnozOS/wiki/)
   * Issue the help command (comming soon. Use the above option)
 
 
