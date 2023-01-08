@@ -67,6 +67,12 @@ class Shell:
         if cmd_set_seq[0] == 'setenv':
             setenv(cmd_set_seq, self)
 
+        if cmd_set_seq[0] == 'mkenv':
+            mkenv(cmd_set_seq, self)
+
+        if cmd_set_seq[0] == 'dlenv':
+            dlenv(cmd_set_seq, self)
+
         if not cmd_set_seq[0] in cmds:
             # Cmd not listed so create error
             print(ERROR, INVALID_CMD, QUOTE+cmd_set_seq[0]+QUOTE, 3)
