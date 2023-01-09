@@ -10,7 +10,7 @@ also if you wan't to make your own changes don't forget to create a pull request
 Need help?
   what you can do is:
   * Check the [wiki](https://github.com/gv-coder/ShnozOS/wiki/)
-  * Issue the help command (comming soon. Use the above option)
+  * Issue the help command
 
 
 I'm available at 1:30pm-6:00pm
