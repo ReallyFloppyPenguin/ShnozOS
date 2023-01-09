@@ -194,17 +194,19 @@ def dlete(cmd_set_seq, instance):
 def edit(cmd_set_seq, instance):
     if instance.cd:
         try:
-            if not path.splitext(cmd_set_seq[1])[1]:
-                p = 'centrl\\'+instance.cd+'\\'+cmd_set_seq[1]
+            p = 'centrl\\'+instance.cd+'\\'+cmd_set_seq[1]
+            if path.splitext(cmd_set_seq[1])[1]:
+                
                 try:
                     with open(p, 'w') as tempf:
                         lines = []
+                        print('-------- edit --------')
                         while True:
                             line = input()
-                            if line == 'done':
+                            if line == '*done*':
                                 break
                             else:
-                                lines.append(line)
+                                lines.append(line+'\n')
                         tempf.writelines(lines)
 
                 except FileNotFoundError:
