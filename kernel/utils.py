@@ -76,9 +76,6 @@ class Shell:
         if cmd_set_seq[0] == 'dlenv':
             dlenv(cmd_set_seq, self)
 
-        if cmd_set_seq[0] == 'wincmd':
-            wincmd(cmd_set_seq, self)
-
         if cmd_set_seq[0] == 'new':
             new(cmd_set_seq, self)
 

@@ -4,13 +4,12 @@ FILE_NOT_FOUND, DIR_NOT_FOUND, CANNOT_EDIT
 from tools.parser import Parse
 from hashlib import sha256
 from .version import *
-from subprocess import Popen, PIPE
 from shutil import rmtree
 from os import mkdir, remove, path
 
 cmds = [
     'cd', 'rsetu', 'quit', 'udateu', 'github', 'ver', 'setenv', 'mkenv',
-    'dlenv', 'help', 'wincmd', 'arth', 'new', 'dlete', 'edit'
+    'dlenv', 'help', 'arth', 'new', 'dlete', 'edit'
 ]
 
 def cd(cmd_set_seq, instance):
@@ -134,21 +133,6 @@ def dlenv(cmd_set_seq, instance):
             print(ERROR, 'No environment variable name and value not defined')
     else:
         raise ShellInstanceError(FATAL_ERR, instance, IS_NOT, OF_TYPE, SHELL)
-
-def wincmd(cmd_set_seq, instance):
-    try:
-        if cmd_set_seq[1]:
-            pp = Popen(cmd_set_seq[1], stderr=PIPE, stdout=PIPE)
-            pp.wait()
-            out, err = pp.communicate()
-            if not out and err:
-                print(err)
-            elif out and not err:
-                print(out)
-            else:
-                print('cmd ended with outcode 0')
-    except IndexError:
-        print(ERROR, MISSING_ARG, '1.', 'Cannot run wincmd')
 
 
 def new(cmd_set_seq, instance):
