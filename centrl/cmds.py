@@ -1,9 +1,11 @@
 from tools.error import ShellInstanceError, FATAL_ERR, SHELL, \
 IS_NOT, OF_TYPE, ERROR, QUOTE, INVALID_ENV_VAR, MISSING_ARG, FILE_EXISTS, \
-FILE_NOT_FOUND
+FILE_NOT_FOUND, DIR_NOT_FOUND
+from tools.parser import Parse
 from hashlib import sha256
 from .version import *
 from subprocess import Popen, PIPE
+from shutil import rmtree
 from os import mkdir, remove, path
 
 cmds = [
@@ -14,7 +16,29 @@ cmds = [
 def cd(cmd_set_seq, instance):
     """`instance` must be of type Shell"""
     if instance.cd:
-        return f'{cmd_set_seq[1]}'
+        try:
+            p = 'centrl\\'+instance.cd+'\\'+cmd_set_seq[1]
+            if cmd_set_seq[1] == '../':
+                back_p = Parse().parse(instance.cd, sep='\\')[0]
+                cd_into_back_p = 'centrl\\'+back_p
+                if not back_p:
+                    return instance.cd
+                    
+                if path.isdir(cd_into_back_p):
+                    return f'{back_p}'
+                else:
+                    print(ERROR, DIR_NOT_FOUND, back_p+'.', 
+                    'Cannot cd into dir')
+                    return instance.cd
+            
+            if path.isdir(p):
+                return f'{instance.cd}\\{cmd_set_seq[1]}'
+            else:
+                print(ERROR, DIR_NOT_FOUND, instance.cd+'\\'+cmd_set_seq[1]+'.', 
+                'Cannot cd into dir')
+                return instance.cd
+        except IndexError:
+            pass
     else:
         raise ShellInstanceError(FATAL_ERR, instance, IS_NOT, OF_TYPE, SHELL)
 
@@ -136,15 +160,16 @@ def new(cmd_set_seq, instance):
                     with open(p, 'x') as tempf:
                         pass
                 except FileExistsError:
-                    print(ERROR, MISSING_ARG, '1.', 'Cannot run new')
+                    print(ERROR, FILE_EXISTS, instance.cd+'\\'+cmd_set_seq[1]+'.', 
+                    'Cannot create new file')
             else:
                 p = 'centrl\\'+instance.cd+'\\'+cmd_set_seq[1]
                 try:
                     mkdir(p)
                 except FileExistsError:
-                    print(ERROR, MISSING_ARG, '1.', 'Cannot run new') 
+                    print(ERROR, FILE_EXISTS, p+'.', 'Cannot create new file')
         except IndexError:
-            print(ERROR, FILE_EXISTS, p+'.', 'Cannot create new file')
+            print(ERROR, MISSING_ARG, '1.', 'Cannot run new')
     else:
         raise ShellInstanceError(FATAL_ERR, instance, IS_NOT, OF_TYPE, SHELL)
 
@@ -154,7 +179,10 @@ def dlete(cmd_set_seq, instance):
         try:
             try:
                 p = 'centrl\\'+instance.cd+'\\'+cmd_set_seq[1]
-                remove(p)
+                if path.splitext(cmd_set_seq[1])[1]:
+                    remove(p)
+                else:
+                    rmtree(p, ignore_errors=True)
             except FileNotFoundError:
                 print(ERROR, FILE_NOT_FOUND, instance.cd+'\\'+cmd_set_seq[1], 
                 'Cannot run dlete')
