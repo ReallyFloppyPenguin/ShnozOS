@@ -1,12 +1,14 @@
 from tools.error import ShellInstanceError, FATAL_ERR, SHELL, \
-IS_NOT, OF_TYPE, ERROR, QUOTE, INVALID_ENV_VAR, MISSING_ARG
+IS_NOT, OF_TYPE, ERROR, QUOTE, INVALID_ENV_VAR, MISSING_ARG, FILE_EXISTS#, \
+
 from hashlib import sha256
 from .version import *
 from subprocess import Popen, PIPE
+from os import mkdir, remove
 
 cmds = [
     'cd', 'rsetu', 'quit', 'udateu', 'github', 'ver', 'setenv', 'mkenv',
-    'dlenv', 'help', 'wincmd', 'arth'
+    'dlenv', 'help', 'wincmd', 'arth', 'new', 'edit'
 ]
 
 def cd(cmd_set_seq, instance):
@@ -124,11 +126,37 @@ def wincmd(cmd_set_seq, instance):
     except IndexError:
         print(ERROR, MISSING_ARG, '1.', 'Cannot run wincmd')
 
-            
+
+def new(cmd_set_seq, instance):
+    if instance.cd:
+        try:
+            p = 'centrl\\'+instance.cd+'\\'+cmd_set_seq[1]
+            try:
+                with open(p, 'x') as tempf:
+                    pass
+            except FileExistsError:
+                print(ERROR, MISSING_ARG, '1.', 'Cannot run new')
+        except IndexError:
+            print(ERROR, FILE_EXISTS, p, 'Cannot create new file')
+    else:
+        raise ShellInstanceError(FATAL_ERR, instance, IS_NOT, OF_TYPE, SHELL)
+
+
+def dlete(cmd_set_seq, instance):
+    if instance.cd:
+        try:
+            p = 'centrl\\'+instance.cd+'\\'+cmd_set_seq[1]
+            remove(p)
+        except IndexError:
+            print(ERROR, MISSING_ARG, '1.', 'Cannot run dlete')
+    else:
+        raise ShellInstanceError(FATAL_ERR, instance, IS_NOT, OF_TYPE, SHELL)
+
 
 def help(cmd_set_seq, instance):
     if cmd_set_seq[1] in cmds:
         print('Find help here:', github_link+'/wiki/'+'Commands/')
+
 
 def arth(cmd_set_seq, instance):
     try:

@@ -7,6 +7,7 @@ INVALID_CMD = 'Invalid command'
 QUOTE = '\''
 INVALID_ENV_VAR = 'Invalid environment variable'
 MISSING_ARG = 'Missing argument'
+FILE_EXISTS = 'File exists:'
 
 
 class ShellInstanceError(Exception):
