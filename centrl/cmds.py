@@ -8,7 +8,7 @@ from os import mkdir, remove
 
 cmds = [
     'cd', 'rsetu', 'quit', 'udateu', 'github', 'ver', 'setenv', 'mkenv',
-    'dlenv', 'help', 'wincmd', 'arth', 'new', 'edit'
+    'dlenv', 'help', 'wincmd', 'arth', 'new', 'dlete'
 ]
 
 def cd(cmd_set_seq, instance):

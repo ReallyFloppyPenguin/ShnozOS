@@ -82,6 +82,9 @@ class Shell:
         if cmd_set_seq[0] == 'new':
             new(cmd_set_seq, self)
 
+        if cmd_set_seq[0] == 'dlete':
+            dlete(cmd_set_seq, self)
+
         if cmd_set_seq[0] == 'arth':
             arth(cmd_set_seq, self)
 
