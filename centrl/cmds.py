@@ -1,6 +1,6 @@
 from tools.error import ShellInstanceError, FATAL_ERR, SHELL, \
 IS_NOT, OF_TYPE, ERROR, QUOTE, INVALID_ENV_VAR, MISSING_ARG, FILE_EXISTS, \
-FILE_NOT_FOUND, DIR_NOT_FOUND
+FILE_NOT_FOUND, DIR_NOT_FOUND, CANNOT_EDIT
 from tools.parser import Parse
 from hashlib import sha256
 from .version import *
@@ -10,7 +10,7 @@ from os import mkdir, remove, path
 
 cmds = [
     'cd', 'rsetu', 'quit', 'udateu', 'github', 'ver', 'setenv', 'mkenv',
-    'dlenv', 'help', 'wincmd', 'arth', 'new', 'dlete'
+    'dlenv', 'help', 'wincmd', 'arth', 'new', 'dlete', 'edit'
 ]
 
 def cd(cmd_set_seq, instance):
@@ -191,6 +191,31 @@ def dlete(cmd_set_seq, instance):
     else:
         raise ShellInstanceError(FATAL_ERR, instance, IS_NOT, OF_TYPE, SHELL)
 
+def edit(cmd_set_seq, instance):
+    if instance.cd:
+        try:
+            if not path.splitext(cmd_set_seq[1])[1]:
+                p = 'centrl\\'+instance.cd+'\\'+cmd_set_seq[1]
+                try:
+                    with open(p, 'w') as tempf:
+                        lines = []
+                        while True:
+                            line = input()
+                            if line == 'done':
+                                break
+                            else:
+                                lines.append(line)
+                        tempf.writelines(lines)
+
+                except FileNotFoundError:
+                    print(ERROR, FILE_NOT_FOUND, instance.cd+'\\'+cmd_set_seq[1]+'.', 
+                    'Cannot edit file')
+            else:
+                print(ERROR, CANNOT_EDIT, p, 'is a directory. Cannot edit')
+        except IndexError:
+            print(ERROR, MISSING_ARG, '1.', 'Cannot run new')
+    else:
+        raise ShellInstanceError(FATAL_ERR, instance, IS_NOT, OF_TYPE, SHELL)
 
 def help(cmd_set_seq, instance):
     if cmd_set_seq[1] in cmds:
