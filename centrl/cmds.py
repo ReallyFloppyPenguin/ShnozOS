@@ -1,10 +1,10 @@
 from tools.error import ShellInstanceError, FATAL_ERR, SHELL, \
-IS_NOT, OF_TYPE, ERROR, QUOTE, INVALID_ENV_VAR, MISSING_ARG, FILE_EXISTS#, \
-
+IS_NOT, OF_TYPE, ERROR, QUOTE, INVALID_ENV_VAR, MISSING_ARG, FILE_EXISTS, \
+FILE_NOT_FOUND
 from hashlib import sha256
 from .version import *
 from subprocess import Popen, PIPE
-from os import mkdir, remove
+from os import mkdir, remove, path
 
 cmds = [
     'cd', 'rsetu', 'quit', 'udateu', 'github', 'ver', 'setenv', 'mkenv',
@@ -130,14 +130,21 @@ def wincmd(cmd_set_seq, instance):
 def new(cmd_set_seq, instance):
     if instance.cd:
         try:
-            p = 'centrl\\'+instance.cd+'\\'+cmd_set_seq[1]
-            try:
-                with open(p, 'x') as tempf:
-                    pass
-            except FileExistsError:
-                print(ERROR, MISSING_ARG, '1.', 'Cannot run new')
+            if path.splitext(cmd_set_seq[1])[1]:
+                p = 'centrl\\'+instance.cd+'\\'+cmd_set_seq[1]
+                try:
+                    with open(p, 'x') as tempf:
+                        pass
+                except FileExistsError:
+                    print(ERROR, MISSING_ARG, '1.', 'Cannot run new')
+            else:
+                p = 'centrl\\'+instance.cd+'\\'+cmd_set_seq[1]
+                try:
+                    mkdir(p)
+                except FileExistsError:
+                    print(ERROR, MISSING_ARG, '1.', 'Cannot run new') 
         except IndexError:
-            print(ERROR, FILE_EXISTS, p, 'Cannot create new file')
+            print(ERROR, FILE_EXISTS, p+'.', 'Cannot create new file')
     else:
         raise ShellInstanceError(FATAL_ERR, instance, IS_NOT, OF_TYPE, SHELL)
 
@@ -145,8 +152,12 @@ def new(cmd_set_seq, instance):
 def dlete(cmd_set_seq, instance):
     if instance.cd:
         try:
-            p = 'centrl\\'+instance.cd+'\\'+cmd_set_seq[1]
-            remove(p)
+            try:
+                p = 'centrl\\'+instance.cd+'\\'+cmd_set_seq[1]
+                remove(p)
+            except FileNotFoundError:
+                print(ERROR, FILE_NOT_FOUND, instance.cd+'\\'+cmd_set_seq[1], 
+                'Cannot run dlete')
         except IndexError:
             print(ERROR, MISSING_ARG, '1.', 'Cannot run dlete')
     else:

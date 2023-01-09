@@ -8,6 +8,7 @@ QUOTE = '\''
 INVALID_ENV_VAR = 'Invalid environment variable'
 MISSING_ARG = 'Missing argument'
 FILE_EXISTS = 'File exists:'
+FILE_NOT_FOUND = 'File not found:'
 
 
 class ShellInstanceError(Exception):
