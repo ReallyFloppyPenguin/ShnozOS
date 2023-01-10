@@ -9,7 +9,7 @@ from os import mkdir, remove, path
 
 cmds = [
     'cd', 'rsetu', 'quit', 'udateu', 'github', 'ver', 'setenv', 'mkenv',
-    'dlenv', 'help', 'arth', 'new', 'dlete', 'edit'
+    'dlenv', 'help', 'arth', 'new', 'dlete', 'edit', 'lidir'
 ]
 
 def cd(cmd_set_seq, instance):
