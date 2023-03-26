@@ -13,4 +13,4 @@ Need help?
   * Issue the help command
 
 
-I'm available at 1:30pm-6:00pm
+I'm available at 1:30pm-3:00pm
