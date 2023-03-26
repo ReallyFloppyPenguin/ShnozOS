@@ -7,7 +7,8 @@ from tools.error import ERROR, INVALID_CMD, QUOTE
 class Shell:
     def __init__(self, fsf: str, data_j: str) -> None:
         self.cd = 'root'
-        self.json = self.load('centrl/data.json')
+        self.data_j = data_j
+        self.json = self.load(self.data_j)
         try:
             if not self.json['user']['username']:
                 self.create_user()
@@ -82,6 +83,9 @@ class Shell:
         if cmd_set_seq[0] == 'dlete':
             dlete(cmd_set_seq, self)
 
+        if cmd_set_seq[0] == 'lidir':
+            lidir(cmd_set_seq, self)
+
         if cmd_set_seq[0] == 'edit':
             edit(cmd_set_seq, self)
 
@@ -90,7 +94,7 @@ class Shell:
 
         if not cmd_set_seq[0] in cmds:
             # Cmd not listed so create error
-            print(ERROR, INVALID_CMD, QUOTE+cmd_set_seq[0]+QUOTE, 3)
+            print(ERROR, INVALID_CMD, QUOTE+cmd_set_seq[0]+QUOTE)
 
         self.reload(self.cd)
 
@@ -111,7 +115,7 @@ class Shell:
 
     def reload(self, cd):
         self.cd = cd
-        self.json = self.load('centrl/data.json')
+        self.json = self.load(self.data_j)
         try:
             if not self.json['user']['username']:
                 self.create_user()

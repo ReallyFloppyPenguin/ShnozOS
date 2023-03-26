@@ -1,11 +1,9 @@
-from tools.error import ShellInstanceError, FATAL_ERR, SHELL, \
-IS_NOT, OF_TYPE, ERROR, QUOTE, INVALID_ENV_VAR, MISSING_ARG, FILE_EXISTS, \
-FILE_NOT_FOUND, DIR_NOT_FOUND, CANNOT_EDIT
+from tools.error import *
 from tools.parser import Parse
 from hashlib import sha256
 from .version import *
 from shutil import rmtree
-from os import mkdir, remove, path
+from os import mkdir, remove, path, walk
 
 cmds = [
     'cd', 'rsetu', 'quit', 'udateu', 'github', 'ver', 'setenv', 'mkenv',
@@ -141,8 +139,11 @@ def new(cmd_set_seq, instance):
             if path.splitext(cmd_set_seq[1])[1]:
                 p = 'centrl\\'+instance.cd+'\\'+cmd_set_seq[1]
                 try:
-                    with open(p, 'x') as tempf:
-                        pass
+                    if instance.cd == "root":
+                        print(ERROR, INVALID_CMD+": Cannot create file in root dir")
+                    else:
+                        with open(p, 'x') as tempf:
+                            pass
                 except FileExistsError:
                     print(ERROR, FILE_EXISTS, instance.cd+'\\'+cmd_set_seq[1]+'.', 
                     'Cannot create new file')
@@ -204,17 +205,38 @@ def edit(cmd_set_seq, instance):
         raise ShellInstanceError(FATAL_ERR, instance, IS_NOT, OF_TYPE, SHELL)
 
 def help(cmd_set_seq, instance):
-    if cmd_set_seq[1] in cmds:
-        print('Find help here:', github_link+'/wiki/'+'Commands/')
+    try:
+        if cmd_set_seq[1] in cmds:
+            print('Find help here:', github_link+'/wiki/'+'Commands/')
+    except:
+        print(ERROR, MISSING_ARG)
 
 
 def arth(cmd_set_seq, instance):
     try:
         if cmd_set_seq[2] == '+':
-            print(int(cmd_set_seq[1])+int(cmd_set_seq[3]))
+            print(int(cmd_set_seq[1])+float(cmd_set_seq[3]))
     except Exception as e:
         print(e)
 
+
+def lidir(cmd_set_seq, instance):
+    if instance.cd:
+        try:
+            p = 'centrl\\'+instance.cd+'\\'
+            print(f'Inside {p}')
+            for root, dirs, files in walk(p, topdown=False):
+                #for name in files:
+                #    print(f'{p}\\{name}')
+                for name in dirs:
+                    print(f'{p}\\{name}')
+                    for root2, dirs2, files2 in walk(f'{p}\\{name}', topdown=True):
+                        for fname in files2:
+                            print(f'{p}\\{name}\\{fname}')
+        except IndexError:
+            print(ERROR, MISSING_ARG, '1.', 'Cannot run new')
+    else:
+        raise ShellInstanceError(FATAL_ERR, instance, IS_NOT, OF_TYPE, SHELL)
 
 
 def ensure_password_is_right(instance):
