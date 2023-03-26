@@ -225,14 +225,26 @@ def lidir(cmd_set_seq, instance):
         try:
             p = 'centrl\\'+instance.cd+'\\'
             print(f'Inside {p}')
-            for root, dirs, files in walk(p, topdown=False):
-                #for name in files:
-                #    print(f'{p}\\{name}')
-                for name in dirs:
-                    print(f'{p}\\{name}')
-                    for root2, dirs2, files2 in walk(f'{p}\\{name}', topdown=True):
-                        for fname in files2:
-                            print(f'{p}\\{name}\\{fname}')
+            if (instance.cd == "root"):
+                for root, dirs, files in walk(p, topdown=False):
+                    #for name in files:
+                    #    print(f'{p}\\{name}')
+                    for name in dirs:
+                        print(f'{p}\\{name}')
+                        for root, dirs, files in walk(f'{p}\\{name}', topdown=True):
+                            for fname in files:
+                                print(f'{p}\\{name}\\{fname}')
+            else:
+                for root, dirs, files in walk(p, topdown=False):
+                    for name in dirs:
+                        print(f'{p}\\{name}')
+                        for root2, dirs2, files2 in walk(f'{p}\\{name}', topdown=True):
+
+                            for fname2 in files2:
+                                print(f'{p}\\{name}\\{fname}')
+                    for name in files:
+                        print(f'{p}\\{name}')
+
         except IndexError:
             print(ERROR, MISSING_ARG, '1.', 'Cannot run new')
     else:
