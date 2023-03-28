@@ -12,12 +12,13 @@ class Shell:
         try:
             if not self.json['user']['username']:
                 self.create_user()
-        except AttributeError:
+        except:
             self.create_user()
         self.username = self.json['user']['username']
         self.passw = self.json['user']['password']
         self.inp_start = f'{self.username}@{self.cd}$ '
         self.jp = data_j.encode('utf-8')
+
         self.fsf = fsf
             
         
@@ -37,10 +38,10 @@ class Shell:
         self.json = self.load('centrl/data.json')
 
 
-    def execute(self):
-        while True:
+    def execute(self, inp=None):
+        if not inp:
             inp = input(self.inp_start)
-            self.handle(inp)
+        self.handle(inp)
 
 
     def handle(self, inp):
@@ -91,6 +92,7 @@ class Shell:
 
         if cmd_set_seq[0] == 'arth':
             arth(cmd_set_seq, self)
+        
 
         if not cmd_set_seq[0] in cmds:
             # Cmd not listed so create error

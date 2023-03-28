@@ -7,7 +7,7 @@ from os import mkdir, remove, path, walk
 
 cmds = [
     'cd', 'rsetu', 'quit', 'udateu', 'github', 'ver', 'setenv', 'mkenv',
-    'dlenv', 'help', 'arth', 'new', 'dlete', 'edit', 'lidir'
+    'dlenv', 'help', 'arth', 'new', 'dlete', 'edit', 'lidir', 'newcmd'
 ]
 
 def cd(cmd_set_seq, instance):
@@ -137,16 +137,28 @@ def new(cmd_set_seq, instance):
     if instance.cd:
         try:
             if path.splitext(cmd_set_seq[1])[1]:
-                p = 'centrl\\'+instance.cd+'\\'+cmd_set_seq[1]
-                try:
-                    if instance.cd == "root":
-                        print(ERROR, INVALID_CMD+": Cannot create file in root dir")
-                    else:
-                        with open(p, 'x') as tempf:
-                            pass
-                except FileExistsError:
-                    print(ERROR, FILE_EXISTS, instance.cd+'\\'+cmd_set_seq[1]+'.', 
-                    'Cannot create new file')
+                if cmd_set_seq[2]:
+                    p = 'centrl\\'+cmd_set_seq[2]+'\\'+cmd_set_seq[1]
+                    try:
+                        if cmd_set_seq[2] == "root":
+                            print(ERROR, INVALID_CMD+": Cannot create file in root dir")
+                        else:
+                            with open(p, 'x') as tempf:
+                                pass
+                    except FileExistsError:
+                        print(ERROR, FILE_EXISTS, cmd_set_seq[2]+'\\'+cmd_set_seq[1]+'.', 
+                        'Cannot create new file')
+                else:
+                    p = 'centrl\\'+instance.cd+'\\'+cmd_set_seq[1]
+                    try:
+                        if instance.cd == "root":
+                            print(ERROR, INVALID_CMD+": Cannot create file in root dir")
+                        else:
+                            with open(p, 'x') as tempf:
+                                pass
+                    except FileExistsError:
+                        print(ERROR, FILE_EXISTS, instance.cd+'\\'+cmd_set_seq[1]+'.', 
+                        'Cannot create new file')
             else:
                 p = 'centrl\\'+instance.cd+'\\'+cmd_set_seq[1]
                 try:
@@ -181,22 +193,38 @@ def edit(cmd_set_seq, instance):
         try:
             p = 'centrl\\'+instance.cd+'\\'+cmd_set_seq[1]
             if path.splitext(cmd_set_seq[1])[1]:
-                
-                try:
-                    with open(p, 'w') as tempf:
-                        lines = []
-                        print('-------- edit --------')
-                        while True:
-                            line = input()
-                            if line == '*done*':
-                                break
-                            else:
-                                lines.append(line+'\n')
-                        tempf.writelines(lines)
+                if cmd_set_seq[2] == 'true':
+                    try:
+                        with open(p, 'a') as tempf:
+                            lines = []
+                            print('-------- edit --------')
+                            while True:
+                                line = input()
+                                if line == '*done*':
+                                    break
+                                else:
+                                    lines.append(line+'\n')
+                            tempf.writelines(lines)
 
-                except FileNotFoundError:
-                    print(ERROR, FILE_NOT_FOUND, instance.cd+'\\'+cmd_set_seq[1]+'.', 
-                    'Cannot edit file')
+                    except FileNotFoundError:
+                        print(ERROR, FILE_NOT_FOUND, instance.cd+'\\'+cmd_set_seq[1]+'.', 
+                        'Cannot edit file')
+                else:
+                    try:
+                        with open(p, 'w') as tempf:
+                            lines = []
+                            print('-------- edit --------')
+                            while True:
+                                line = input()
+                                if line == '*done*':
+                                    break
+                                else:
+                                    lines.append(line+'\n')
+                            tempf.writelines(lines)
+
+                    except FileNotFoundError:
+                        print(ERROR, FILE_NOT_FOUND, instance.cd+'\\'+cmd_set_seq[1]+'.', 
+                        'Cannot edit file')
             else:
                 print(ERROR, CANNOT_EDIT, p, 'is a directory. Cannot edit')
         except IndexError:
@@ -250,6 +278,7 @@ def lidir(cmd_set_seq, instance):
     else:
         raise ShellInstanceError(FATAL_ERR, instance, IS_NOT, OF_TYPE, SHELL)
 
+        
 
 def ensure_password_is_right(instance):
     json = instance.json
