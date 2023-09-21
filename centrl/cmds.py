@@ -278,6 +278,7 @@ def lidir(cmd_set_seq, instance):
     else:
         raise ShellInstanceError(FATAL_ERR, instance, IS_NOT, OF_TYPE, SHELL)
 
+
         
 
 def ensure_password_is_right(instance):

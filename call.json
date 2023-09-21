@@ -1,0 +1,9 @@
+{
+   "cmds" : [
+
+      [
+         ["npx", "start", "poo"], "print hello"
+      ]
+      
+   ]
+}
